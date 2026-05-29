@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Arun Electronics | Shop & Product Photos</title>
+  <meta name="description" content="View photos of Arun Electronics shop, products and repair work in Gopiganj, Bhadohi.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#6c5ce7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" id="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">⚡</div>
+        Arun Electronics
+      </a>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="gallery.html" class="active">Gallery</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Gallery</h1>
+      <p>Photos of our shop, products, and repair work</p>
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <span class="current">Gallery</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GALLERY SECTION ===== -->
+  <section class="section">
+    <div class="container">
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs animate-on-scroll">
+        <button class="gallery-filter-tab filter-tab active" data-filter="all">All Photos</button>
+        <button class="gallery-filter-tab filter-tab" data-filter="products">📦 Products</button>
+        <button class="gallery-filter-tab filter-tab" data-filter="shop">🏪 Shop</button>
+        <button class="gallery-filter-tab filter-tab" data-filter="repair">🔧 Repair Work</button>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid">
+
+        <!-- Product Images -->
+        <div class="gallery-item animate-on-scroll delay-1" data-category="products">
+          <img src="images/products/tv.png" alt="LED Smart TV">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-2" data-category="products">
+          <img src="images/products/refrigerator.png" alt="Double Door Refrigerator">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-3" data-category="products">
+          <img src="images/products/cooler.png" alt="Desert Cooler">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-4" data-category="products">
+          <img src="images/products/iron.png" alt="Steam Iron">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-1" data-category="products">
+          <img src="images/products/d2h.png" alt="D2H Set Top Box">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-2" data-category="products">
+          <img src="images/products/electrical.png" alt="Electrical Items">
+        </div>
+
+        <!-- Shop Images (using product images as placeholders) -->
+        <div class="gallery-item animate-on-scroll delay-3" data-category="shop">
+          <img src="images/products/tv.png" alt="Shop Display — TVs">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-4" data-category="shop">
+          <img src="images/products/refrigerator.png" alt="Shop Display — Refrigerators">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-1" data-category="shop">
+          <img src="images/products/cooler.png" alt="Shop Display — Coolers">
+        </div>
+
+        <!-- Repair Work (using product images as placeholders) -->
+        <div class="gallery-item animate-on-scroll delay-2" data-category="repair">
+          <img src="images/products/electrical.png" alt="Electrical Repair Work">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-3" data-category="repair">
+          <img src="images/products/tv.png" alt="TV Repair Work">
+        </div>
+        <div class="gallery-item animate-on-scroll delay-4" data-category="repair">
+          <img src="images/products/d2h.png" alt="D2H Installation">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Close">✕</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="Previous">❮</button>
+    <button class="lightbox-nav lightbox-next" aria-label="Next">❯</button>
+    <img src="" alt="Gallery Preview">
+  </div>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Want to Visit Our Shop?</h2>
+      <p>Come see our full range of products at Gopiganj, Bhadohi</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn btn-secondary btn-lg">📍 Get Directions</a>
+        <a href="products.html" class="btn btn-outline btn-lg">View Products</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo" style="margin-bottom: 16px;">
+            <div class="logo-icon">⚡</div>
+            Arun Electronics
+          </div>
+          <p>Your trusted electronics store in Gopiganj, Bhadohi. Quality products and expert repairing services.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="about.html">About Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="products.html">Television</a></li>
+            <li><a href="products.html">Refrigerator</a></li>
+            <li><a href="products.html">Cooler</a></li>
+            <li><a href="products.html">Electrical Items</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Info</h4>
+          <ul>
+            <li><a href="https://www.google.com/maps/search/Arun+Electronics+Station+Road+Gopiganj+Gerai+UP+221303" target="_blank">📍 Station Road, Gopiganj, UP 221303</a></li>
+            <li><a href="tel:+91XXXXXXXXXX">📞 +91 XXXXXXXXXX</a></li>
+            <li><a href="#">🕐 9:00 AM – 9:00 PM</a></li>
+            <li><a href="contact.html">✉️ Send Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Arun Electronics, Gopiganj, Bhadohi. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/91XXXXXXXXXX?text=Hello%20Arun%20Electronics" target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">💬</a>
+
+  <script src="js/script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('[PWA] SW registered:', reg.scope))
+          .catch(err => console.warn('[PWA] SW failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
