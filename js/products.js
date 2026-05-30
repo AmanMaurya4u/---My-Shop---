@@ -114,23 +114,27 @@ const CATEGORY_COLORS = {
 
 /* ---------- AI KEYWORD MAPPING ---------- */
 const AI_INTENTS = [
-  { keywords: ['summer', 'hot', 'garmi', 'heat', 'cool', 'cooling', 'dhoop', 'temperature', 'garam'], response: 'Here are products to beat the heat! 🌞', products: [45, 46, 49, 27, 26, 28], services: [] },
+  { keywords: ['summer', 'hot', 'garmi', 'heat', 'cool', 'cooling', 'dhoop', 'temperature', 'garam', 'cooler', 'coolers'], response: 'Here are products to beat the heat! 🌞', products: [45, 46, 49, 27, 26, 28], services: [] },
   { keywords: ['winter', 'cold', 'thand', 'sardi', 'warm', 'warmth'], response: 'Stay warm with these products! ❄️', products: [37, 36, 35, 34], services: [] },
   { keywords: ['light', 'lamp', 'bulb', 'lighting', 'dark', 'roshni', 'ujala', 'bright'], response: 'Brighten up your space! 💡', products: [14, 15, 16, 17], services: [] },
   { keywords: ['power', 'backup', 'bijli', 'current', 'outage', 'cut', 'electricity'], response: 'Never face power cuts again! 🔋', products: [39, 40, 41, 38], services: [] },
   { keywords: ['kitchen', 'cook', 'khana', 'food', 'cooking', 'rasoi'], response: 'Upgrade your kitchen! 🍳', products: [29, 31, 30, 32, 33], services: [] },
+  { keywords: ['tv not working', 'television not working', 'tv repair', 'repair tv', 'repairing tv', 'tv issue', 'tv problem'], response: 'We provide expert TV repair services for LED, LCD, and Smart TVs! 📺', products: [44], services: ['r1'] },
   { keywords: ['tv', 'television', 'watch', 'movie', 'screen', 'serial', 'show'], response: 'Entertainment solutions for you! 📺', products: [44, 42, 43], services: [] },
+  { keywords: ['fridge not working', 'refrigerator not working', 'fridge repair', 'refrigerator repair', 'fridge issue'], response: 'We repair all types of refrigerators (single door, double door)! 🧊', products: [47], services: ['r2'] },
+  { keywords: ['cooler not working', 'cooler repair', 'cooler issue'], response: 'We provide room cooler and desert cooler repair services! ❄️', products: [45, 46], services: ['r3'] },
+  { keywords: ['ac not working', 'ac repair', 'ac issue'], response: 'We provide split and window AC repair and gas filling services! ❄️', products: [49], services: ['r4'] },
   { keywords: ['repair', 'fix', 'broken', 'kharab', 'not working', 'problem', 'band', 'issue', 'service'], response: 'We can fix it! Our repair services: 🔧', products: [], services: ['r1', 'r2', 'r3', 'r4', 'r5', 'r6'] },
   { keywords: ['wire', 'wiring', 'connection', 'switch', 'board'], response: 'Wiring & switch solutions: 🔌', products: [18, 19, 20, 21, 1, 2], services: ['r6'] },
   { keywords: ['safety', 'protection', 'shock', 'suraksha', 'trip', 'short circuit'], response: 'Safety & protection products: 🛡️', products: [21, 22, 23, 4, 6], services: ['r6'] },
-  { keywords: ['fan', 'hawa', 'air', 'pankha'], response: 'Fan solutions for your home: 🌀', products: [27, 26, 28, 24], services: [] },
+  { keywords: ['fan', 'hawa', 'air', 'pankha', 'best fan'], response: 'Fan solutions for your home: 🌀', products: [27, 26, 28, 24], services: [] },
   { keywords: ['water', 'pani', 'paani', 'drink'], response: 'Water solutions: 💧', products: [50, 36, 35, 30], services: [] },
   { keywords: ['wash', 'kapda', 'clothes', 'laundry', 'dhulai'], response: 'Laundry solutions: 🫧', products: [48, 34], services: ['r5'] },
   { keywords: ['music', 'song', 'gaana', 'entertainment', 'sound', 'audio'], response: 'Music & entertainment: 🎵', products: [43, 44, 42], services: [] },
   { keywords: ['iron', 'press', 'istri', 'wrinkle'], response: 'Ironing solutions: 👔', products: [34], services: [] },
   { keywords: ['fridge', 'refrigerator', 'cold storage', 'store food'], response: 'Refrigeration options: 🧊', products: [47, 38], services: ['r2'] },
-  { keywords: ['ac', 'air conditioner', 'ac repair'], response: 'AC products & services: ❄️', products: [49, 38], services: ['r4'] },
-  { keywords: ['inverter', 'battery', 'ups', 'power backup'], response: 'Power backup solutions: ⚡', products: [39, 40, 41], services: [] },
+  { keywords: ['ac', 'air conditioner'], response: 'AC products & services: ❄️', products: [49, 38], services: ['r4'] },
+  { keywords: ['inverter', 'battery', 'ups', 'power backup', 'need inverter'], response: 'Power backup solutions: ⚡', products: [39, 40, 41], services: [] },
   { keywords: ['stabilizer', 'voltage', 'fluctuation'], response: 'Voltage protection: ⚡', products: [38, 21, 22], services: [] },
   { keywords: ['hello', 'hi', 'hey', 'namaste', 'hii', 'good morning', 'good evening'], response: 'Namaste! 🙏 Welcome to Arun Electronics AI Helper. Tell me what you need — like "I need something for summer" or "power backup needed".', products: [], services: [] },
   { keywords: ['help', 'what can you do', 'options', 'kya hai', 'btao'], response: 'I can help you find products! Try asking:\n• "I need something for summer"\n• "Power backup needed"\n• "My TV is not working"\n• "Need light products"\n• "Kitchen appliances"', products: [], services: [] },
@@ -163,9 +167,19 @@ const REVIEWS = [
 /* ============================================
    INITIALIZATION
    ============================================ */
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initProductPage();
+    if (!document.getElementById('productGrid')) {
+      initAIChatbot();
+    }
+  });
+} else {
   initProductPage();
-});
+  if (!document.getElementById('productGrid')) {
+    initAIChatbot();
+  }
+}
 
 function initProductPage() {
   const productGrid = document.getElementById('productGrid');
@@ -464,31 +478,74 @@ document.addEventListener('keydown', (e) => {
 let chatHistory = [];
 
 function initAIChatbot() {
-  const chatToggle = document.getElementById('aiChatToggle');
-  const chatPanel = document.getElementById('aiChatPanel');
+  // 1. Inject Toggle button if missing
+  let chatToggle = document.getElementById('aiChatToggle');
+  if (!chatToggle) {
+    chatToggle = document.createElement('button');
+    chatToggle.className = 'ai-chat-toggle';
+    chatToggle.id = 'aiChatToggle';
+    chatToggle.setAttribute('aria-label', 'Open AI Helper');
+    chatToggle.innerHTML = `
+      🤖
+      <span class="chat-badge">AI</span>
+    `;
+    document.body.appendChild(chatToggle);
+  }
+
+  // 2. Inject Panel if missing
+  let chatPanel = document.getElementById('aiChatPanel');
+  if (!chatPanel) {
+    chatPanel = document.createElement('div');
+    chatPanel.className = 'ai-chat-panel';
+    chatPanel.id = 'aiChatPanel';
+    chatPanel.innerHTML = `
+      <div class="ai-chat-header">
+        <div class="ai-chat-header-info">
+          <div class="ai-chat-header-avatar">🤖</div>
+          <div>
+            <h4>Arun Electronics AI Helper</h4>
+            <span>Online • Ask me anything!</span>
+          </div>
+        </div>
+        <button class="ai-chat-close" id="aiChatClose" aria-label="Close chat">✕</button>
+      </div>
+      <div class="ai-chat-body" id="aiChatBody">
+        <!-- Chat messages rendered dynamically -->
+      </div>
+      <div class="ai-chat-input-area">
+        <input type="text" id="aiChatInput" placeholder="Type your query... (e.g. I need something for summer)">
+        <button class="ai-chat-send" id="aiChatSend" aria-label="Send message">➤</button>
+      </div>
+    `;
+    document.body.appendChild(chatPanel);
+  }
+
   const chatClose = document.getElementById('aiChatClose');
   const chatInput = document.getElementById('aiChatInput');
   const chatSend = document.getElementById('aiChatSend');
 
-  if (!chatToggle || !chatPanel) return;
+  // 3. Inject Chat Overlay dynamically
+  let chatOverlay = document.querySelector('.ai-chat-overlay');
+  if (!chatOverlay) {
+    chatOverlay = document.createElement('div');
+    chatOverlay.className = 'ai-chat-overlay';
+    document.body.appendChild(chatOverlay);
+  }
 
   chatToggle.addEventListener('click', () => {
-    chatPanel.classList.toggle('active');
-    chatToggle.classList.toggle('active');
-    if (chatPanel.classList.contains('active') && chatHistory.length === 0) {
-      addBotMessage('Namaste! 🙏 I\'m the Arun Electronics AI Helper. Tell me what you need!\n\nTry saying:\n• "I need something for summer"\n• "Power backup needed"\n• "My TV is not working"\n• "Need light products"');
-    }
-    if (chatPanel.classList.contains('active') && chatInput) {
-      setTimeout(() => chatInput.focus(), 300);
+    if (chatPanel.classList.contains('active')) {
+      closeAIChat();
+    } else {
+      openAIChat();
     }
   });
 
   if (chatClose) {
-    chatClose.addEventListener('click', () => {
-      chatPanel.classList.remove('active');
-      chatToggle.classList.remove('active');
-    });
+    chatClose.addEventListener('click', closeAIChat);
   }
+
+  // Close when overlay clicked
+  chatOverlay.addEventListener('click', closeAIChat);
 
   if (chatInput && chatSend) {
     chatSend.addEventListener('click', () => sendAIMessage());
@@ -498,6 +555,20 @@ function initAIChatbot() {
         sendAIMessage();
       }
     });
+  }
+
+  function openAIChat() {
+    chatPanel.classList.add('active');
+    chatToggle.classList.add('active');
+    chatOverlay.classList.add('active');
+    
+    if (chatHistory.length === 0) {
+      addBotMessage('Hello 👋 Welcome to Arun Electronics.\nHow can I help you today?');
+    }
+    
+    if (chatInput) {
+      setTimeout(() => chatInput.focus(), 300);
+    }
   }
 }
 
@@ -683,8 +754,10 @@ function removeTypingIndicator() {
 function closeAIChat() {
   const chatPanel = document.getElementById('aiChatPanel');
   const chatToggle = document.getElementById('aiChatToggle');
+  const chatOverlay = document.querySelector('.ai-chat-overlay');
   if (chatPanel) chatPanel.classList.remove('active');
   if (chatToggle) chatToggle.classList.remove('active');
+  if (chatOverlay) chatOverlay.classList.remove('active');
 }
 
 function escapeHtml(text) {

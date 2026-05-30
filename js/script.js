@@ -48,19 +48,68 @@ function initMobileNav() {
   const navMenu = document.getElementById('navMenu');
   if (!hamburger || !navMenu) return;
 
+  // 1. Create or select Dark Overlay dynamically
+  let overlay = document.querySelector('.nav-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'nav-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  // 2. Create sidebar header with brand logo & close button dynamically
+  if (!navMenu.querySelector('.sidebar-brand-wrapper')) {
+    const brandWrapper = document.createElement('div');
+    brandWrapper.className = 'sidebar-brand-wrapper';
+    brandWrapper.innerHTML = `
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        Arun Electronics
+      </div>
+      <button class="sidebar-close" aria-label="Close menu" title="Close Menu">&times;</button>
+    `;
+    navMenu.insertBefore(brandWrapper, navMenu.firstChild);
+
+    // Event listener for dynamic Close button (X)
+    const closeBtn = brandWrapper.querySelector('.sidebar-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeMenu);
+    }
+  }
+
+  // Toggle navigation menu
   hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+    if (navMenu.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   });
 
+  // Close when overlay (outside sidebar) is clicked
+  overlay.addEventListener('click', closeMenu);
+
+  // Close when links are clicked
   navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      navMenu.classList.remove('active');
-      document.body.style.overflow = '';
+    link.addEventListener('click', (e) => {
+      if (!link.closest('.sidebar-brand-wrapper')) {
+        closeMenu();
+      }
     });
   });
+
+  function openMenu() {
+    hamburger.classList.add('active');
+    navMenu.classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
 }
 
 /* ---------- Header Scroll Effect ---------- */
@@ -367,4 +416,11 @@ function openWhatsApp(productName) {
     `Hello Arun Electronics,\nI want information about: ${productName}`
   );
   window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+}
+
+/* ---------- Dynamic products.js Loading for Non-Products Pages ---------- */
+if (!document.querySelector('script[src*="products.js"]')) {
+  const script = document.createElement('script');
+  script.src = 'js/products.js';
+  document.body.appendChild(script);
 }
