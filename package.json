@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "dev": "http-server -p 8080"
+  },
   "dependencies": {
     "duck-duck-scrape": "^2.2.7"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }
