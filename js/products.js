@@ -114,33 +114,157 @@ const CATEGORY_COLORS = {
 
 /* ---------- AI KEYWORD MAPPING ---------- */
 const AI_INTENTS = [
-  { keywords: ['summer', 'hot', 'garmi', 'heat', 'cool', 'cooling', 'dhoop', 'temperature', 'garam', 'cooler', 'coolers'], response: 'Here are products to beat the heat! 🌞', products: [45, 46, 49, 27, 26, 28], services: [] },
-  { keywords: ['winter', 'cold', 'thand', 'sardi', 'warm', 'warmth'], response: 'Stay warm with these products! ❄️', products: [37, 36, 35, 34], services: [] },
-  { keywords: ['light', 'lamp', 'bulb', 'lighting', 'dark', 'roshni', 'ujala', 'bright'], response: 'Brighten up your space! 💡', products: [14, 15, 16, 17], services: [] },
-  { keywords: ['power', 'backup', 'bijli', 'current', 'outage', 'cut', 'electricity'], response: 'Never face power cuts again! 🔋', products: [39, 40, 41, 38], services: [] },
-  { keywords: ['kitchen', 'cook', 'khana', 'food', 'cooking', 'rasoi'], response: 'Upgrade your kitchen! 🍳', products: [29, 31, 30, 32, 33], services: [] },
-  { keywords: ['tv not working', 'television not working', 'tv repair', 'repair tv', 'repairing tv', 'tv issue', 'tv problem'], response: 'We provide expert TV repair services for LED, LCD, and Smart TVs! 📺', products: [44], services: ['r1'] },
-  { keywords: ['tv', 'television', 'watch', 'movie', 'screen', 'serial', 'show'], response: 'Entertainment solutions for you! 📺', products: [44, 42, 43], services: [] },
-  { keywords: ['fridge not working', 'refrigerator not working', 'fridge repair', 'refrigerator repair', 'fridge issue'], response: 'We repair all types of refrigerators (single door, double door)! 🧊', products: [47], services: ['r2'] },
-  { keywords: ['cooler not working', 'cooler repair', 'cooler issue'], response: 'We provide room cooler and desert cooler repair services! ❄️', products: [45, 46], services: ['r3'] },
-  { keywords: ['ac not working', 'ac repair', 'ac issue'], response: 'We provide split and window AC repair and gas filling services! ❄️', products: [49], services: ['r4'] },
-  { keywords: ['repair', 'fix', 'broken', 'kharab', 'not working', 'problem', 'band', 'issue', 'service'], response: 'We can fix it! Our repair services: 🔧', products: [], services: ['r1', 'r2', 'r3', 'r4', 'r5', 'r6'] },
-  { keywords: ['wire', 'wiring', 'connection', 'switch', 'board'], response: 'Wiring & switch solutions: 🔌', products: [18, 19, 20, 21, 1, 2], services: ['r6'] },
-  { keywords: ['safety', 'protection', 'shock', 'suraksha', 'trip', 'short circuit'], response: 'Safety & protection products: 🛡️', products: [21, 22, 23, 4, 6], services: ['r6'] },
-  { keywords: ['fan', 'hawa', 'air', 'pankha', 'best fan'], response: 'Fan solutions for your home: 🌀', products: [27, 26, 28, 24], services: [] },
-  { keywords: ['water', 'pani', 'paani', 'drink'], response: 'Water solutions: 💧', products: [50, 36, 35, 30], services: [] },
-  { keywords: ['wash', 'kapda', 'clothes', 'laundry', 'dhulai'], response: 'Laundry solutions: 🫧', products: [48, 34], services: ['r5'] },
-  { keywords: ['music', 'song', 'gaana', 'entertainment', 'sound', 'audio'], response: 'Music & entertainment: 🎵', products: [43, 44, 42], services: [] },
-  { keywords: ['iron', 'press', 'istri', 'wrinkle'], response: 'Ironing solutions: 👔', products: [34], services: [] },
-  { keywords: ['fridge', 'refrigerator', 'cold storage', 'store food'], response: 'Refrigeration options: 🧊', products: [47, 38], services: ['r2'] },
-  { keywords: ['ac', 'air conditioner'], response: 'AC products & services: ❄️', products: [49, 38], services: ['r4'] },
-  { keywords: ['inverter', 'battery', 'ups', 'power backup', 'need inverter'], response: 'Power backup solutions: ⚡', products: [39, 40, 41], services: [] },
-  { keywords: ['stabilizer', 'voltage', 'fluctuation'], response: 'Voltage protection: ⚡', products: [38, 21, 22], services: [] },
-  { keywords: ['hello', 'hi', 'hey', 'namaste', 'hii', 'good morning', 'good evening'], response: 'Namaste! 🙏 Welcome to Arun Electronics AI Helper. Tell me what you need — like "I need something for summer" or "power backup needed".', products: [], services: [] },
-  { keywords: ['help', 'what can you do', 'options', 'kya hai', 'btao'], response: 'I can help you find products! Try asking:\n• "I need something for summer"\n• "Power backup needed"\n• "My TV is not working"\n• "Need light products"\n• "Kitchen appliances"', products: [], services: [] },
-  { keywords: ['thank', 'thanks', 'dhanyavad', 'shukriya'], response: 'You\'re welcome! 😊 Visit Arun Electronics at Station Road, Gopiganj, Gerai, UP 221303 for best prices. Feel free to ask anything else!', products: [], services: [] },
-  { keywords: ['price', 'cost', 'rate', 'kitna', 'kimat', 'daam'], response: 'For best prices, please contact us on WhatsApp or visit our shop at Station Road, Gopiganj, Gerai, UP 221303! 💬 Click "Ask Price" on any product card.', products: [], services: [] },
-  { keywords: ['address', 'location', 'where', 'kahan', 'shop', 'dukan', 'map', 'direction', 'rasta'], response: '📍 Our shop address:\n\nArun Electronics\nStation Road, Gopiganj,\nGerai, Uttar Pradesh 221303\n\n🕐 Open: 9:00 AM – 9:00 PM (Mon–Sun)\n\nVisit us or click the map link on our Contact page!', products: [], services: [] }
+  // 1. GREETINGS
+  {
+    keywords: ['hello', 'hi', 'hey', 'namaste', 'hii', 'good morning', 'good evening', 'ram ram', 'pranam', 'namaskar', 'swagat', 'salam'],
+    response: "👋 Namaste! Arun Electronics mein aapka swagat hai.\n\nMain aapki products, repairing services aur prices ke baare mein help kar sakta hoon.\n\nAap Hindi, English ya Hinglish mein baat kar sakte hain.",
+    products: [],
+    services: []
+  },
+  
+  // 2. SUMMER / COOLING (Garmi ke liye / cooling ke liye)
+  {
+    keywords: ['garmi', 'garmi ke liye', 'garmi ke liye kuch chahiye', 'cooling ke liye', 'cooling', 'summer', 'hot', 'heat', 'cooler chahiye', 'ac chahiye', 'pankha chahiye', 'thanda', 'thanda karne ke liye'],
+    response: "Garmi ke liye hum Cooler, Ceiling Fan aur AC recommend karte hain. Aapka budget kya hai?",
+    products: [45, 49, 27],
+    services: []
+  },
+  
+  // 3. POWER BACKUP (Need inverter)
+  {
+    keywords: ['need inverter', 'power backup', 'inverter', 'battery', 'ups', 'stabilizer', 'bijli cut', 'light cut', 'power backup chahiye', 'backup chahiye', 'battery chahiye', 'inverter chahiye'],
+    response: "Ji, hamare paas Inverter, Battery aur UPS available hain. Kya aap home use ke liye chahiye ya shop ke liye?",
+    products: [39, 40, 41],
+    services: []
+  },
+
+  // 4. LIGHTING (Light chahiye)
+  {
+    keywords: ['light chahiye', 'light', 'bulb', 'lighting', 'roshni', 'ujala', 'led panel', 'tube light', 'tubelight', 'bulb chahiye', 'led bulb'],
+    response: "Ji bilkul, lighting ke liye hum LED Bulb, Tube Light aur LED Panel Light recommend karte hain. Aapko kaunsa chahiye?",
+    products: [14, 15, 16],
+    services: []
+  },
+
+  // 5. TV SPECIFIC PRICE ("TV kitne ka hai?")
+  {
+    keywords: ['tv kitne ka hai', 'tv price', 'tv rates', 'tv kitne ka', 'television kitne ka', 'tv ka rate', 'television price', 'tv cost', 'tv ka price', 'smart tv price'],
+    response: "TV ki price model ke hisab se alag-alag hoti hai. Aap kaunsa brand dekhna chahenge?",
+    products: [44],
+    services: []
+  },
+
+  // 6. TV REPAIR ("TV kharab hai")
+  {
+    keywords: ['tv kharab hai', 'tv kharab', 'tv repairing', 'tv repair', 'television repair', 'tv display issue', 'tv nahi chal raha', 'television kharab', 'tv problem', 'tv check karna hai'],
+    response: "Ji, hum TV Repairing Service provide karte hain. Aap WhatsApp par photo bhej sakte hain.",
+    products: [],
+    services: ['r1']
+  },
+
+  // 7. FRIDGE REPAIR ("Fridge cooling nahi kar raha")
+  {
+    keywords: ['fridge cooling nahi kar raha', 'fridge cooling', 'fridge kharab', 'fridge repair', 'refrigerator repair', 'fridge thanda nahi', 'fridge cooling issue', 'refrigerator cooling issue', 'fridge nahi chal raha'],
+    response: "Ye gas ya compressor issue ho sakta hai. Hum fridge repairing service bhi provide karte hain.",
+    products: [],
+    services: ['r2']
+  },
+
+  // 8. SHOP LOCATION ("Shop kaha hai?")
+  {
+    keywords: ['shop kaha hai', 'location', 'address', 'kahan hai dukan', 'dukan kaha hai', 'shop address', 'dukan ka pata', 'where is shop', 'rasta', 'direction', 'map link', 'map', 'gopiganj', 'bhadohi', 'up 221303'],
+    response: "Arun Electronics, Gopiganj, Bhadohi, Uttar Pradesh mein located hai.",
+    products: [],
+    services: []
+  },
+
+  // 9. CONTACT NUMBER ("Contact number?")
+  {
+    keywords: ['contact number', 'phone number', 'mobile number', 'call number', 'contact', 'number', 'phone', 'mobile', 'call detail', 'call number'],
+    response: "Ji, hamara contact number +91 XXXXXXXXXX hai.",
+    products: [],
+    services: []
+  },
+
+  // 10. GENERAL PRICES
+  {
+    keywords: ['price', 'cost', 'rate', 'kitna', 'kimat', 'daam', 'kitne ka hai', 'rates', 'wholesale rate'],
+    response: "Ji, hamare paas sabhi products best rates par available hain! Aap kis product ki price janna chahte hain? Aap direct card par 'Ask Price' click karke WhatsApp par bhi rate pooch sakte hain.",
+    products: [],
+    services: []
+  },
+
+  // 11. GENERAL REPAIR / SERVICE
+  {
+    keywords: ['repair', 'fix', 'broken', 'kharab', 'not working', 'problem', 'band', 'issue', 'service', 'repairing', 'mistri', 'technician'],
+    response: "Ji bilkul, hum expert repairing services provide karte hain. Aapka kaunsa equipment kharab hai? Hamari repair services niche dekh sakte hain:",
+    products: [],
+    services: ['r1', 'r2', 'r3', 'r4', 'r5', 'r6']
+  },
+
+  // 12. WINTER APPLIANCES
+  {
+    keywords: ['winter', 'cold', 'thand', 'sardi', 'warm', 'warmth', 'room heater', 'geyser', 'heater rod'],
+    response: "Thand ke liye hamare paas Room Heaters, Geysers aur Water Heater Rods available hain. Thand se bachne ke liye aapko kya chahiye?",
+    products: [37, 36, 35],
+    services: []
+  },
+
+  // 13. KITCHEN APPLIANCES
+  {
+    keywords: ['kitchen', 'cook', 'khana', 'food', 'cooking', 'rasoi', 'mixer grinder', 'induction', 'kettle'],
+    response: "Ji bilkul, kitchen ke liye hamare paas Mixer Grinder, Induction Cooktop, Electric Kettle aur Microwave available hain. Aap kya dekhna chahenge?",
+    products: [29, 31, 30, 33],
+    services: []
+  },
+
+  // 14. ELECTRICAL WIRING / SWITCHES
+  {
+    keywords: ['wire', 'wiring', 'connection', 'switch', 'board', 'holder', 'socket', 'plug'],
+    response: "Ji, board fitting aur wiring ke liye hamare paas modular switches, sockets, wires aur boards available hain. House wiring repairing bhi hum karte hain.",
+    products: [18, 20, 1, 2, 10],
+    services: ['r6']
+  },
+
+  // 15. SAFETY / PROTECTION (MCB/RCCB)
+  {
+    keywords: ['safety', 'protection', 'shock', 'suraksha', 'trip', 'short circuit', 'mcb', 'rccb', 'stabilizer'],
+    response: "Short circuit aur shock protection ke liye hamare paas MCB, RCCB, DB Box aur Stabilizers available hain. Safety ke liye kya chahiye?",
+    products: [21, 22, 38],
+    services: ['r6']
+  },
+
+  // 16. LAUNDRY / WASHING
+  {
+    keywords: ['wash', 'kapda', 'clothes', 'laundry', 'dhulai', 'washing machine', 'iron', 'press'],
+    response: "Kapda dhone aur iron karne ke liye hamare paas Washing Machines aur Electric Irons available hain. Washing machine repair bhi hum karte hain.",
+    products: [48, 34],
+    services: ['r5']
+  },
+
+  // 17. MUSIC / SOUND
+  {
+    keywords: ['music', 'song', 'gaana', 'entertainment', 'sound', 'audio', 'speaker', 'soundbar'],
+    response: "Gaanon ke liye hamare paas Bluetooth Speakers aur Tower Speakers available hain. Sound check ke liye shop par visit karein!",
+    products: [43, 44],
+    services: []
+  },
+
+  // 18. HELP
+  {
+    keywords: ['help', 'kya kar sakte ho', 'options', 'what can you do', 'services', 'features', 'batao', 'kaise kaam karta hai'],
+    response: "Main aapki products, repairing services aur prices ke baare mein help kar sakta hoon. Aap Hindi, English ya Hinglish mein pooch sakte hain, jaise:\n• 'TV kitne ka hai?'\n• 'Mujhe garmi ke liye kuch chahiye'\n• 'Shop kaha hai?'\n• 'TV kharab hai'\n• 'Contact number?'",
+    products: [],
+    services: []
+  },
+
+  // 19. THANK YOU
+  {
+    keywords: ['thank', 'thanks', 'dhanyavad', 'shukriya', 'ok thank you', 'ok thanks', 'aacha', 'teek hai', 'theek hai'],
+    response: "Ji shukriya! Aapki help karke bahut khushi hui. Koi aur problem हो तो जरूर बतायें। Arun Electronics mein dobara swagat hai! 😊",
+    products: [],
+    services: []
+  }
 ];
 
 /* ---------- TODAY'S DEALS ---------- */
@@ -563,7 +687,7 @@ function initAIChatbot() {
     chatOverlay.classList.add('active');
     
     if (chatHistory.length === 0) {
-      addBotMessage('Hello 👋 Welcome to Arun Electronics.\nHow can I help you today?');
+      addBotMessage("👋 Namaste! Arun Electronics mein aapka swagat hai.\n\nMain aapki products, repairing services aur prices ke baare mein help kar sakta hoon.\n\nAap Hindi, English ya Hinglish mein baat kar sakte hain.");
     }
     
     if (chatInput) {
@@ -595,6 +719,17 @@ function sendAIMessage() {
 function processAIQuery(query) {
   const q = query.toLowerCase();
 
+  // Helper to match keyword with word boundary checks for short keywords
+  function matchKeyword(str, keyword) {
+    const kw = keyword.toLowerCase();
+    if (kw.length <= 3) {
+      const escaped = kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp('\\b' + escaped + '\\b', 'i');
+      return regex.test(str);
+    }
+    return str.includes(kw);
+  }
+
   // Find matching intent
   let bestMatch = null;
   let maxScore = 0;
@@ -602,7 +737,7 @@ function processAIQuery(query) {
   for (const intent of AI_INTENTS) {
     let score = 0;
     for (const keyword of intent.keywords) {
-      if (q.includes(keyword)) {
+      if (matchKeyword(q, keyword)) {
         score += keyword.length; // Longer keyword matches are more specific
       }
     }
@@ -638,10 +773,10 @@ function processAIQuery(query) {
     );
 
     if (directMatches.length > 0) {
-      addBotMessage(`I found these products for you! 🎯`);
+      addBotMessage("Ji, hamare paas ye products available hain! Aap inhein dekh sakte hain: 🎯");
       addProductCards(directMatches.slice(0, 6));
     } else {
-      addBotMessage('I couldn\'t find an exact match. 🤔 Try asking about:\n• Summer/cooling products\n• Kitchen appliances\n• Power backup\n• Lighting\n• Repair services\n\nOr contact us on WhatsApp for personalized help! 💬');
+      addBotMessage("Maaf kijiye, mujhe iski exact jankari nahi hai. Aap WhatsApp par contact kar sakte hain aur hum jaldi help karenge.");
     }
   }
 }

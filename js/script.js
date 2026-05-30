@@ -88,11 +88,16 @@ function initMobileNav() {
   // Close when overlay (outside sidebar) is clicked
   overlay.addEventListener('click', closeMenu);
 
-  // Close when links are clicked
+  // Close when links are clicked and navigate to the page programmatically
   navMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', (e) => {
       if (!link.closest('.sidebar-brand-wrapper')) {
+        e.preventDefault();
+        const href = link.getAttribute('href');
         closeMenu();
+        if (href) {
+          window.location.href = href;
+        }
       }
     });
   });
@@ -102,6 +107,15 @@ function initMobileNav() {
     navMenu.classList.add('active');
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Hide AI chatbot toggle and close its panel if open
+    const chatToggle = document.getElementById('aiChatToggle');
+    const chatPanel = document.getElementById('aiChatPanel');
+    const chatOverlay = document.querySelector('.ai-chat-overlay');
+    if (chatToggle) chatToggle.style.display = 'none';
+    if (chatPanel) chatPanel.classList.remove('active');
+    if (chatOverlay) chatOverlay.classList.remove('active');
+    if (chatToggle) chatToggle.classList.remove('active');
   }
 
   function closeMenu() {
@@ -109,6 +123,10 @@ function initMobileNav() {
     navMenu.classList.remove('active');
     overlay.classList.remove('active');
     document.body.style.overflow = '';
+
+    // Show AI chatbot toggle again
+    const chatToggle = document.getElementById('aiChatToggle');
+    if (chatToggle) chatToggle.style.display = '';
   }
 }
 
