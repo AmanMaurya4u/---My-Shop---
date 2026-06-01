@@ -88,16 +88,11 @@ function initMobileNav() {
   // Close when overlay (outside sidebar) is clicked
   overlay.addEventListener('click', closeMenu);
 
-  // Close when links are clicked and navigate to the page programmatically
+  // Close when links are clicked
   navMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', (e) => {
       if (!link.closest('.sidebar-brand-wrapper')) {
-        e.preventDefault();
-        const href = link.getAttribute('href');
         closeMenu();
-        if (href) {
-          window.location.href = href;
-        }
       }
     });
   });
