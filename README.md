@@ -122,7 +122,7 @@ Arun-Electronics/
 └── README.md
 ```
 
----
+---.
 
 ## 🎯 Project Goals
 
