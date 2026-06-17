@@ -1,4 +1,4 @@
-# Arun Electronics Website,
+# Arun Electronics Website,z
 ## 📌 Project Overview
 
 Arun Electronics Website is a modern, responsive electronics store website developed for **Arun Electronics**, located in **Gopiganj, Bhadohi, Uttar Pradesh**. The website provides customers with an easy way to explore products, view repairing services, contact the shop, and receive AI-powered product recommendations.
