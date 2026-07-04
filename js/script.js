@@ -103,15 +103,6 @@ function initMobileNav() {
     navMenu.classList.add('active');
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-
-    // Hide AI chatbot toggle and close its panel if open
-    const chatToggle = document.getElementById('aiChatToggle');
-    const chatPanel = document.getElementById('aiChatPanel');
-    const chatOverlay = document.querySelector('.ai-chat-overlay');
-    if (chatToggle) chatToggle.style.display = 'none';
-    if (chatPanel) chatPanel.classList.remove('active');
-    if (chatOverlay) chatOverlay.classList.remove('active');
-    if (chatToggle) chatToggle.classList.remove('active');
   }
 
   function closeMenu() {
@@ -119,10 +110,6 @@ function initMobileNav() {
     navMenu.classList.remove('active');
     overlay.classList.remove('active');
     document.body.style.overflow = '';
-
-    // Show AI chatbot toggle again
-    const chatToggle = document.getElementById('aiChatToggle');
-    if (chatToggle) chatToggle.style.display = '';
   }
 }
 
@@ -430,13 +417,6 @@ function openWhatsApp(productName) {
     `Hello Arun Electronics,\nI want information about: ${productName}`
   );
   window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-}
-
-/* ---------- Dynamic products.js Loading for Non-Products Pages ---------- */
-if (!document.querySelector('script[src*="products.js"]')) {
-  const script = document.createElement('script');
-  script.src = 'js/products.js';
-  document.body.appendChild(script);
 }
 
 /* ============================================
