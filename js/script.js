@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGalleryFilter();
   initContactForm();
   initAnimatedCounters();
+  initPWAInstallPrompt();
 });
 
 /* ---------- Theme Toggle (Dark Mode) ---------- */
@@ -436,4 +437,104 @@ if (!document.querySelector('script[src*="products.js"]')) {
   const script = document.createElement('script');
   script.src = 'js/products.js';
   document.body.appendChild(script);
+}
+
+/* ============================================
+   PWA APP INSTALLATION PROMPT (AFTER 15s)
+   ============================================ */
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+function initPWAInstallPrompt() {
+  // Check if already installed or dismissed forever
+  if (localStorage.getItem('ae-app-installed') === 'true' || localStorage.getItem('ae-install-prompt-dismissed') === 'true') {
+    return;
+  }
+
+  // Check if running in standalone mode (already installed as PWA)
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+    return;
+  }
+
+  // Show option after 15 seconds (15000ms) for new visitors
+  setTimeout(() => {
+    if (localStorage.getItem('ae-app-installed') === 'true' || localStorage.getItem('ae-install-prompt-dismissed') === 'true') {
+      return;
+    }
+    showPWAInstallBanner();
+  }, 15000);
+}
+
+function showPWAInstallBanner() {
+  if (document.getElementById('pwaInstallBanner')) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'pwaInstallBanner';
+  banner.className = 'pwa-install-banner';
+  banner.innerHTML = `
+    <div class="pwa-banner-header">
+      <div class="pwa-banner-icon">⚡</div>
+      <div class="pwa-banner-title">
+        <span>Official Store App</span>
+        <h4>Arun Electronics</h4>
+      </div>
+      <button class="pwa-banner-close" id="pwaCloseBtn" aria-label="Close modal" title="Close">&times;</button>
+    </div>
+    <div class="pwa-banner-body">
+      <p id="pwaBodyText">Install our official app for quick access to daily electronics deals, fast repair bookings, and offline product catalog!</p>
+    </div>
+    <div class="pwa-banner-actions">
+      <button class="pwa-btn-install" id="pwaInstallBtn">📲 Install App Now</button>
+      <button class="pwa-btn-later" id="pwaLaterBtn">Maybe Later</button>
+    </div>
+  `;
+
+  document.body.appendChild(banner);
+
+  // Trigger smooth glassmorphism fade/slide-in animation
+  setTimeout(() => {
+    banner.classList.add('show');
+  }, 100);
+
+  const installBtn = banner.querySelector('#pwaInstallBtn');
+  const bodyText = banner.querySelector('#pwaBodyText');
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      if (outcome === 'accepted') {
+        localStorage.setItem('ae-app-installed', 'true');
+        closePWABanner();
+      }
+      deferredInstallPrompt = null;
+    } else {
+      // Graceful fallback instructions if native prompt is not ready (e.g. iOS Safari / HTTP)
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS) {
+        bodyText.innerHTML = '<strong>To install on iOS:</strong> Tap the Share button <span style="font-size:1.2em;">⎋</span> at the bottom of Safari and select <strong>"Add to Home Screen" ➕</strong>.';
+      } else {
+        bodyText.innerHTML = '<strong>To install manually:</strong> Tap your browser menu <span style="font-size:1.2em;">⋮</span> in the top right corner and select <strong>"Install App"</strong> or <strong>"Add to Home Screen"</strong>.';
+      }
+      installBtn.style.display = 'none';
+    }
+  });
+
+  const closeBtn = banner.querySelector('#pwaCloseBtn');
+  const laterBtn = banner.querySelector('#pwaLaterBtn');
+
+  function closePWABanner(dismissForever = false) {
+    banner.classList.remove('show');
+    setTimeout(() => banner.remove(), 500);
+    if (dismissForever) {
+      localStorage.setItem('ae-install-prompt-dismissed', 'true');
+    }
+  }
+
+  closeBtn.addEventListener('click', () => closePWABanner(true));
+  laterBtn.addEventListener('click', () => closePWABanner(true));
 }

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "http-server -p 8080"
+    "dev": "http-server -p 8080 -c-1 -o index.html"
   },
   "dependencies": {
     "duck-duck-scrape": "^2.2.7"
