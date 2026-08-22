@@ -126,11 +126,16 @@ function initHeaderScroll() {
 
 /* ---------- Active Nav Highlighting ---------- */
 function initActiveNav() {
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  let currentPage = window.location.pathname.split('/').pop();
+  if (!currentPage || !currentPage.endsWith('.html')) {
+    currentPage = 'index.html';
+  }
   document.querySelectorAll('.nav-menu a').forEach(link => {
     const href = link.getAttribute('href');
-    if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+    if (href === currentPage) {
       link.classList.add('active');
+    } else if (href && !href.startsWith('#')) {
+      link.classList.remove('active');
     }
   });
 }
