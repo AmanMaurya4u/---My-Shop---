@@ -421,17 +421,18 @@ function openWhatsApp(productName) {
 }
 
 /* ============================================
-   PWA APP INSTALLATION PROMPT (AFTER 15s)
+   PWA APP INSTALLATION PROMPT & MANUAL TRIGGERS
    ============================================ */
 let deferredInstallPrompt = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
+  console.log('[PWA] beforeinstallprompt captured');
 });
 
 function initPWAInstallPrompt() {
-  // Check if already installed or dismissed forever
+  // Check if already installed or dismissed
   if (localStorage.getItem('ae-app-installed') === 'true' || localStorage.getItem('ae-install-prompt-dismissed') === 'true') {
     return;
   }
@@ -441,7 +442,7 @@ function initPWAInstallPrompt() {
     return;
   }
 
-  // Show option after 15 seconds (15000ms) for new visitors
+  // Auto show PWA Install banner after 15 seconds (15000ms) for visitors
   setTimeout(() => {
     if (localStorage.getItem('ae-app-installed') === 'true' || localStorage.getItem('ae-install-prompt-dismissed') === 'true') {
       return;
@@ -450,66 +451,85 @@ function initPWAInstallPrompt() {
   }, 15000);
 }
 
-function showPWAInstallBanner() {
-  if (document.getElementById('pwaInstallBanner')) return;
+function showPWAInstallBanner(forceShow = false) {
+  let banner = document.getElementById('pwaInstallBanner');
 
-  const banner = document.createElement('div');
-  banner.id = 'pwaInstallBanner';
-  banner.className = 'pwa-install-banner';
-  banner.innerHTML = `
-    <div class="pwa-banner-header">
-      <div class="pwa-banner-icon">⚡</div>
-      <div class="pwa-banner-title">
-        <span>Official Store App</span>
-        <h4>Arun Electronics</h4>
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'pwaInstallBanner';
+    banner.className = 'pwa-install-banner';
+    banner.innerHTML = `
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-icon">⚡</div>
+        <div class="pwa-banner-title">
+          <span>Official Store App</span>
+          <h4>Arun Electronics</h4>
+        </div>
+        <button class="pwa-banner-close" id="pwaCloseBtn" aria-label="Close modal" title="Close">&times;</button>
       </div>
-      <button class="pwa-banner-close" id="pwaCloseBtn" aria-label="Close modal" title="Close">&times;</button>
-    </div>
-    <div class="pwa-banner-body">
-      <p id="pwaBodyText">Install our official app for quick access to daily electronics deals, fast repair bookings, and offline product catalog!</p>
-    </div>
-    <div class="pwa-banner-actions">
-      <button class="pwa-btn-install" id="pwaInstallBtn">📲 Install App Now</button>
-      <button class="pwa-btn-later" id="pwaLaterBtn">Maybe Later</button>
-    </div>
-  `;
+      <div class="pwa-banner-body">
+        <p id="pwaBodyText">Install our official app for instant access to daily deals, fast repair bookings, and offline catalog!</p>
+      </div>
+      <div class="pwa-banner-actions">
+        <button class="pwa-btn-install" id="pwaInstallBtn">📲 Install App Now</button>
+        <button class="pwa-btn-later" id="pwaLaterBtn">Maybe Later</button>
+      </div>
+    `;
 
-  document.body.appendChild(banner);
+    document.body.appendChild(banner);
 
-  // Trigger smooth glassmorphism fade/slide-in animation
+    const installBtn = banner.querySelector('#pwaInstallBtn');
+    const bodyText = banner.querySelector('#pwaBodyText');
+    const closeBtn = banner.querySelector('#pwaCloseBtn');
+    const laterBtn = banner.querySelector('#pwaLaterBtn');
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        if (outcome === 'accepted') {
+          localStorage.setItem('ae-app-installed', 'true');
+          closePWABanner(false);
+        }
+        deferredInstallPrompt = null;
+      } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+          bodyText.innerHTML = '📲 <strong>iPhone / iPad par Install karein:</strong><br>Safari me neeche Share Icon <span style="font-size:1.2em;">⎋</span> par click karein aur <strong>"Add to Home Screen" ➕</strong> chunein.';
+        } else {
+          bodyText.innerHTML = '📲 <strong>App Install karne ke liye:</strong><br>Browser menu <span style="font-size:1.2em;">⋮</span> (3-Dots) par click karein aur <strong>"Install App"</strong> ya <strong>"Add to Home Screen"</strong> option chunein.';
+        }
+        installBtn.style.display = 'none';
+      }
+    });
+
+    closeBtn.addEventListener('click', () => closePWABanner(true));
+    laterBtn.addEventListener('click', () => closePWABanner(true));
+  } else {
+    // Reset bodyText & installBtn display if re-opened manually
+    const installBtn = banner.querySelector('#pwaInstallBtn');
+    const bodyText = banner.querySelector('#pwaBodyText');
+    if (installBtn) installBtn.style.display = 'flex';
+    if (bodyText) bodyText.innerHTML = 'Install our official app for instant access to daily deals, fast repair bookings, and offline catalog!';
+  }
+
+  banner.style.display = 'flex';
   setTimeout(() => {
     banner.classList.add('show');
-  }, 100);
+  }, 50);
+}
 
-  const installBtn = banner.querySelector('#pwaInstallBtn');
-  const bodyText = banner.querySelector('#pwaBodyText');
-
-  installBtn.addEventListener('click', async () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      const { outcome } = await deferredInstallPrompt.userChoice;
-      if (outcome === 'accepted') {
-        localStorage.setItem('ae-app-installed', 'true');
-        closePWABanner();
-      }
-      deferredInstallPrompt = null;
-    } else {
-      // Graceful fallback instructions if native prompt is not ready (e.g. iOS Safari / HTTP)
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      if (isIOS) {
-        bodyText.innerHTML = '<strong>To install on iOS:</strong> Tap the Share button <span style="font-size:1.2em;">⎋</span> at the bottom of Safari and select <strong>"Add to Home Screen" ➕</strong>.';
-      } else {
-        bodyText.innerHTML = '<strong>To install manually:</strong> Tap your browser menu <span style="font-size:1.2em;">⋮</span> in the top right corner and select <strong>"Install App"</strong> or <strong>"Add to Home Screen"</strong>.';
-      }
-      installBtn.style.display = 'none';
-    }
-  });
-
-  const closeBtn = banner.querySelector('#pwaCloseBtn');
-  const laterBtn = banner.querySelector('#pwaLaterBtn');
-
-  closeBtn.addEventListener('click', () => closePWABanner(true));
-  laterBtn.addEventListener('click', () => closePWABanner(true));
+function closePWABanner(isDismissed = false) {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) {
+    banner.classList.remove('show');
+    setTimeout(() => {
+      banner.style.display = 'none';
+    }, 300);
+  }
+  if (isDismissed) {
+    localStorage.setItem('ae-install-prompt-dismissed', 'true');
+  }
 }
 
 /* ============================================
