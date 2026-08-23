@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnimatedCounters();
   initPWAInstallPrompt();
   initAIChatbot();
+  initAuthSystem();
 });
 
 /* ---------- Theme Toggle (Dark Mode) ---------- */
@@ -1180,7 +1181,6 @@ function initAIChatbot() {
           ${cat.descEn}<br><br>
           ✅ <strong>Status:</strong> Available at store with genuine brand warranty!<br>
           Want to know models and today's discounted price?
-          <div class="ai-bubble-actions">
             <button class="ai-action-btn whatsapp" onclick="openWhatsApp('${cat.action} Price Inquiry')">💬 Ask Price on WhatsApp</button>
             <a href="products.html" class="ai-action-btn primary">📦 View in Catalog</a>
           </div>
@@ -1190,4 +1190,444 @@ function initAIChatbot() {
     return null;
   }
 }
+
+/* ============================================
+   AUTHENTICATION & USER SYSTEM
+   ============================================ */
+
+// Global Toast Notification Helper
+function showToast(message, type = 'info', duration = 3500) {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const icons = {
+    success: '✅',
+    error: '❌',
+    info: 'ℹ️'
+  };
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+    <span class="toast-message">${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.35s ease forwards';
+    setTimeout(() => toast.remove(), 350);
+  }, duration);
+}
+
+function initAuthSystem() {
+  // 1. Seed Demo Users in LocalStorage if empty
+  let usersDb = JSON.parse(localStorage.getItem('ae_users_db') || '[]');
+  if (usersDb.length === 0) {
+    usersDb = [
+      {
+        name: 'Demo Customer',
+        email: 'demo@arunelectronics.com',
+        phone: '9876543210',
+        password: 'password123',
+        joined: new Date().toLocaleDateString()
+      },
+      {
+        name: 'Arun Maurya (Admin)',
+        email: 'admin@arunelectronics.com',
+        phone: '9005739983',
+        password: 'admin123',
+        joined: new Date().toLocaleDateString()
+      }
+    ];
+    localStorage.setItem('ae_users_db', JSON.stringify(usersDb));
+  }
+
+  // 2. Sync Header UI on every page load
+  updateNavAuthUI();
+
+  // 3. Page specific handlers for login.html
+  const authContainer = document.getElementById('authContainer');
+  if (!authContainer) return;
+
+  renderAuthView();
+}
+
+function updateNavAuthUI() {
+  const currentUser = JSON.parse(localStorage.getItem('ae_current_user') || 'null');
+  const navAuthLinks = document.querySelectorAll('#navAuthLink, .nav-login-btn');
+
+  navAuthLinks.forEach(link => {
+    if (currentUser) {
+      const firstName = currentUser.name.split(' ')[0];
+      link.innerHTML = `👤 ${firstName}`;
+      link.className = 'user-nav-profile';
+      link.title = `Logged in as ${currentUser.name}`;
+      link.setAttribute('href', 'login.html');
+    } else {
+      link.innerHTML = `🔑 Login`;
+      link.className = 'nav-login-btn';
+      link.title = 'Log in / Register';
+      link.setAttribute('href', 'login.html');
+    }
+  });
+}
+
+function renderAuthView() {
+  const container = document.getElementById('authContainer');
+  if (!container) return;
+
+  const currentUser = JSON.parse(localStorage.getItem('ae_current_user') || 'null');
+
+  if (currentUser) {
+    // Render Logged-In User Profile Dashboard
+    container.innerHTML = `
+      <div class="user-profile-card">
+        <div class="user-avatar-large">${currentUser.name.charAt(0).toUpperCase()}</div>
+        <h3 class="user-welcome-title">Welcome back, ${currentUser.name}!</h3>
+        <p class="user-email-subtitle">Logged in as ${currentUser.email}</p>
+
+        <div class="user-details-grid">
+          <div class="user-detail-item">
+            <label>Full Name</label>
+            <span>${currentUser.name}</span>
+          </div>
+          <div class="user-detail-item">
+            <label>Mobile Number</label>
+            <span>${currentUser.phone || 'N/A'}</span>
+          </div>
+          <div class="user-detail-item">
+            <label>Email Address</label>
+            <span>${currentUser.email}</span>
+          </div>
+          <div class="user-detail-item">
+            <label>Member Since</label>
+            <span>${currentUser.joined || 'Recent'}</span>
+          </div>
+        </div>
+
+        <div class="dashboard-actions">
+          <a href="products.html" class="btn btn-primary" style="width: 100%; justify-content: center;">📦 Browse Catalog & Shop</a>
+          <button class="btn-logout" id="btnLogout">🚪 Log Out</button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('btnLogout')?.addEventListener('click', () => {
+      localStorage.removeItem('ae_current_user');
+      showToast('You have been logged out successfully.', 'info');
+      updateNavAuthUI();
+      renderAuthView();
+    });
+  } else {
+    // Render Auth Form (Tabs: Login | Sign Up)
+    container.innerHTML = `
+      <div class="auth-header">
+        <div class="auth-icon">⚡</div>
+        <h2>Welcome to Arun Electronics</h2>
+        <p>Log in to access your account & special deals</p>
+      </div>
+
+      <!-- Segmented Tab Toggle -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tabBtnLogin">🔑 Login</button>
+        <button class="auth-tab-btn" id="tabBtnSignup">📝 Sign Up</button>
+      </div>
+
+      <div class="auth-forms-wrapper">
+        <!-- LOGIN FORM -->
+        <form class="auth-form active" id="loginForm" onsubmit="return false;">
+          <div class="form-group">
+            <label for="loginEmail">Email or Phone Number</label>
+            <div class="input-icon-group">
+              <input type="text" id="loginEmail" placeholder="e.g. demo@arunelectronics.com" required autocomplete="username">
+              <span class="input-icon">👤</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-icon-group">
+              <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+              <span class="input-icon">🔒</span>
+              <button type="button" class="toggle-password-btn" title="Toggle password visibility">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" checked>
+              Remember me
+            </label>
+            <a href="#" class="forgot-password-link" id="linkForgotPassword">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn-auth-submit" id="btnSubmitLogin">
+            🚀 Log In
+          </button>
+
+          <div class="auth-divider">
+            <span>Or Quick Test</span>
+          </div>
+
+          <button type="button" class="btn-demo-login" id="btnDemoLogin">
+            ⚡ 1-Click Demo Login (Instant Test)
+          </button>
+        </form>
+
+        <!-- SIGN UP FORM -->
+        <form class="auth-form" id="signupForm" onsubmit="return false;">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <div class="input-icon-group">
+              <input type="text" id="signupName" placeholder="Enter your full name" required>
+              <span class="input-icon">👤</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <div class="input-icon-group">
+              <input type="email" id="signupEmail" placeholder="name@example.com" required>
+              <span class="input-icon">✉️</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signupPhone">Mobile Number (10 Digits)</label>
+            <div class="input-icon-group">
+              <input type="tel" id="signupPhone" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+              <span class="input-icon">📞</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <div class="input-icon-group">
+              <input type="password" id="signupPassword" placeholder="Create a strong password" required autocomplete="new-password">
+              <span class="input-icon">🔒</span>
+              <button type="button" class="toggle-password-btn" title="Toggle password visibility">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signupConfirmPassword">Confirm Password</label>
+            <div class="input-icon-group">
+              <input type="password" id="signupConfirmPassword" placeholder="Re-enter password" required autocomplete="new-password">
+              <span class="input-icon">🔒</span>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agreeTerms" required checked>
+              I agree to the Terms & Conditions
+            </label>
+          </div>
+
+          <button type="submit" class="btn-auth-submit">
+            ✨ Create Account
+          </button>
+        </form>
+
+        <!-- FORGOT PASSWORD FORM -->
+        <form class="auth-form" id="forgotForm" onsubmit="return false;">
+          <div class="info-box-alert">
+            <span class="info-icon">ℹ️</span>
+            <div>Enter your registered email or phone number below. We'll generate a password reset code.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="forgotEmail">Email or Mobile Number</label>
+            <div class="input-icon-group">
+              <input type="text" id="forgotEmail" placeholder="e.g. demo@arunelectronics.com" required>
+              <span class="input-icon">✉️</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-submit">
+            📲 Send Reset Code (OTP)
+          </button>
+
+          <div style="text-align: center; margin-top: 12px;">
+            <a href="#" class="forgot-password-link" id="linkBackToLogin">← Back to Login</a>
+          </div>
+        </form>
+      </div>
+    `;
+
+    // Attach Interactivity & Listeners
+    setupAuthListeners();
+  }
+}
+
+function setupAuthListeners() {
+  const tabBtnLogin = document.getElementById('tabBtnLogin');
+  const tabBtnSignup = document.getElementById('tabBtnSignup');
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  const forgotForm = document.getElementById('forgotForm');
+  const linkForgotPassword = document.getElementById('linkForgotPassword');
+  const linkBackToLogin = document.getElementById('linkBackToLogin');
+
+  // Tab switching
+  function switchTab(target) {
+    if (target === 'login') {
+      tabBtnLogin?.classList.add('active');
+      tabBtnSignup?.classList.remove('active');
+      loginForm?.classList.add('active');
+      signupForm?.classList.remove('active');
+      forgotForm?.classList.remove('active');
+    } else if (target === 'signup') {
+      tabBtnSignup?.classList.add('active');
+      tabBtnLogin?.classList.remove('active');
+      signupForm?.classList.add('active');
+      loginForm?.classList.remove('active');
+      forgotForm?.classList.remove('active');
+    } else if (target === 'forgot') {
+      tabBtnLogin?.classList.remove('active');
+      tabBtnSignup?.classList.remove('active');
+      forgotForm?.classList.add('active');
+      loginForm?.classList.remove('active');
+      signupForm?.classList.remove('active');
+    }
+  }
+
+  tabBtnLogin?.addEventListener('click', () => switchTab('login'));
+  tabBtnSignup?.addEventListener('click', () => switchTab('signup'));
+  linkForgotPassword?.addEventListener('click', (e) => {
+    e.preventDefault();
+    switchTab('forgot');
+  });
+  linkBackToLogin?.addEventListener('click', (e) => {
+    e.preventDefault();
+    switchTab('login');
+  });
+
+  // Password Visibility Eye Toggle
+  document.querySelectorAll('.toggle-password-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.previousElementSibling;
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    });
+  });
+
+  // Login Submit Logic
+  loginForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const identifier = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!identifier || !password) {
+      showToast('Please enter both email/phone and password.', 'error');
+      return;
+    }
+
+    const usersDb = JSON.parse(localStorage.getItem('ae_users_db') || '[]');
+    const matchedUser = usersDb.find(u =>
+      (u.email.toLowerCase() === identifier.toLowerCase() || u.phone === identifier) && u.password === password
+    );
+
+    if (matchedUser) {
+      localStorage.setItem('ae_current_user', JSON.stringify(matchedUser));
+      showToast(`Welcome back, ${matchedUser.name}! Login successful 🎉`, 'success');
+      updateNavAuthUI();
+      renderAuthView();
+    } else {
+      showToast('Invalid credentials! Check your email/phone and password.', 'error');
+    }
+  });
+
+  // 1-Click Demo Login
+  document.getElementById('btnDemoLogin')?.addEventListener('click', () => {
+    const usersDb = JSON.parse(localStorage.getItem('ae_users_db') || '[]');
+    const demoUser = usersDb[0] || {
+      name: 'Demo Customer',
+      email: 'demo@arunelectronics.com',
+      phone: '9876543210',
+      joined: new Date().toLocaleDateString()
+    };
+
+    localStorage.setItem('ae_current_user', JSON.stringify(demoUser));
+    showToast('Logged in with Demo Account! 🎉', 'success');
+    updateNavAuthUI();
+    renderAuthView();
+  });
+
+  // Signup Submit Logic
+  signupForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const phone = document.getElementById('signupPhone').value.trim();
+    const pass = document.getElementById('signupPassword').value.trim();
+    const confirmPass = document.getElementById('signupConfirmPassword').value.trim();
+
+    if (!name || !email || !phone || !pass) {
+      showToast('Please complete all required fields.', 'error');
+      return;
+    }
+
+    if (pass !== confirmPass) {
+      showToast('Passwords do not match! Please verify.', 'error');
+      return;
+    }
+
+    let usersDb = JSON.parse(localStorage.getItem('ae_users_db') || '[]');
+    const existing = usersDb.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+    if (existing) {
+      showToast('An account with this email already exists! Try logging in.', 'error');
+      return;
+    }
+
+    const newUser = {
+      name,
+      email,
+      phone,
+      password: pass,
+      joined: new Date().toLocaleDateString()
+    };
+
+    usersDb.push(newUser);
+    localStorage.setItem('ae_users_db', JSON.stringify(usersDb));
+    localStorage.setItem('ae_current_user', JSON.stringify(newUser));
+
+    showToast(`Account created successfully! Welcome, ${name}! ✨`, 'success');
+    updateNavAuthUI();
+    renderAuthView();
+  });
+
+  // Forgot Password Submit Logic
+  forgotForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const identifier = document.getElementById('forgotEmail').value.trim();
+    if (!identifier) {
+      showToast('Please enter your registered email or phone.', 'error');
+      return;
+    }
+
+    showToast(`Demo OTP Sent to ${identifier}! Use code: 123456`, 'info', 5000);
+    setTimeout(() => {
+      switchTab('login');
+      const loginEmailInput = document.getElementById('loginEmail');
+      const loginPassInput = document.getElementById('loginPassword');
+      if (loginEmailInput) loginEmailInput.value = identifier;
+      if (loginPassInput) loginPassInput.value = '123456';
+    }, 1500);
+  });
+}
+
 
