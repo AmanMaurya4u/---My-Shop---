@@ -1206,7 +1206,6 @@ function initAIChatbot() {
           ${cat.descEn}<br><br>
           ✅ <strong>Status:</strong> Available at store with genuine brand warranty!<br>
           Want to know models and today's discounted price?
-          <div class="ai-bubble-actions">
             <button class="ai-action-btn whatsapp" onclick="openWhatsApp('${cat.action} Price Inquiry')">💬 Ask Price on WhatsApp</button>
             <a href="products.html" class="ai-action-btn primary">📦 View in Catalog</a>
           </div>
