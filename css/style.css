@@ -4359,4 +4359,273 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================
+   REPAIR COST ESTIMATOR WIDGET
+   ============================================ */
+.estimator-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.estimator-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+}
+
+.estimator-appliance-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.estimator-chip {
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  background: var(--bg-alt);
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.estimator-chip:hover {
+  border-color: var(--secondary);
+  color: var(--secondary);
+  background: var(--secondary-light);
+}
+
+.estimator-chip.active {
+  background: var(--gradient-accent);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+}
+
+.estimator-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.estimator-select-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.estimator-select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.estimator-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
+}
+
+.estimator-result-box {
+  background: var(--gradient-card);
+  border: 2px dashed var(--primary);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.estimator-result-metrics {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.estimator-metric-item h5 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.estimator-metric-item .val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.estimator-metric-item .val.highlight {
+  color: var(--secondary);
+}
+
+/* ============================================
+   EASY EMI CALCULATOR WIDGET
+   ============================================ */
+.emi-calc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.emi-calc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+.emi-badge-no-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+.emi-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.emi-input-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.emi-input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.emi-tenure-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.emi-tenure-chip {
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.emi-tenure-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.emi-tenure-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.emi-results-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.emi-result-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+}
+
+.emi-result-card.highlight {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.emi-result-card h6 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.emi-result-card .amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .estimator-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .estimator-result-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .emi-results-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 }
